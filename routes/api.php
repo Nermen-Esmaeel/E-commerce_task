@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\AuthController;
 
 /*
@@ -17,7 +18,17 @@ use App\Http\Controllers\Api\Auth\AuthController;
 
 //Auth Routes
 Route::controller(AuthController::class)->group(function () {
-    Route::post('login', 'login');
-    Route::post('register', 'register');
-    Route::post('logout', 'logout');
+        Route::post('login', 'login');
+        Route::post('register', 'register');
+        Route::post('logout', 'logout');
+});
+
+//Category Routes
+Route::group([], function() {
+
+        Route::get('category' , [CategoryController::class , 'index']);
+        Route::post('category' , [CategoryController::class , 'store']);
+        Route::post('category/{id}' , [CategoryController::class , 'update']);
+        Route::delete('category/{id}' , [CategoryController::class , 'destroy']);
+
 });
