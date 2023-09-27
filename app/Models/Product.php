@@ -30,4 +30,10 @@ class Product extends Model
          return $this->morphMany(Image::class, 'imageable');
      }
 
+
+     public function cart(): BelongsTo
+     {
+         return $this->belongsTo(Cart::class, 'product_id', 'id');
+     }
+
 }
