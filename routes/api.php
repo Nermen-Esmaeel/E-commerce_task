@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\AuthController;
 
@@ -23,12 +24,19 @@ Route::controller(AuthController::class)->group(function () {
         Route::post('logout', 'logout');
 });
 
-//Category Routes
-Route::group([], function() {
 
-        Route::get('category' , [CategoryController::class , 'index']);
-        Route::post('category' , [CategoryController::class , 'store']);
-        Route::post('category/{id}' , [CategoryController::class , 'update']);
-        Route::delete('category/{id}' , [CategoryController::class , 'destroy']);
+Route::middleware(['auth'])->group(function () {
+
+        //Category Routes
+        Route::get('categories' , [CategoryController::class , 'index']);
+        Route::post('categories' , [CategoryController::class , 'store']);
+        Route::post('categories/{id}' , [CategoryController::class , 'update']);
+        Route::delete('categories/{id}' , [CategoryController::class , 'destroy']);
+
+        //Product Routes
+        Route::get('products' , [ProductController::class , 'index']);
+        Route::post('products' , [ProductController::class , 'store']);
+        Route::post('products/{id}' , [ProductController::class , 'update']);
+        Route::delete('products/{id}' , [ProductController::class , 'destroy']);
 
 });

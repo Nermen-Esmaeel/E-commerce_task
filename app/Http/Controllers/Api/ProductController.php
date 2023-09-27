@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use Validator;
-use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Category\StoreCategory;
-use App\Http\Resources\Category\CategoryResource;
+use App\Http\Requests\Product\StoreProduct;
+use App\Http\Resources\Product\ProductResource;
 
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
     use ApiResponseTrait;
 
@@ -20,12 +20,12 @@ class CategoryController extends Controller
         $this->middleware('auth:api');
     }
 
-  //fetch all categories
+  //fetch all products
     public function index(){
 
         try {
-            $categories = Category::all();
-            return $this->apiResponse(CategoryResource::collection($categories), 'Success' , 200);
+            $products = Product::all();
+            return $this->apiResponse(ProductResource::collection($products), 'Success' , 200);
 
         }
         catch (\Throwable $th) {
@@ -34,17 +34,17 @@ class CategoryController extends Controller
     }
 
 
-    //store category
-    public function store(StoreCategory $request)
+    //store products
+    public function store(StoreProduct $request)
     {
         try {
 
-            $category = Category::create([
+            $product = Product::create([
 
                 'name' => $request->name,
             ]);
 
-            return $this->apiResponse(new CategoryResource($category), 'Category created successfully' , 201);
+            return $this->apiResponse(ProductResource::collection($product), 'Product created successfully' , 201);
 
         }catch (\Throwable $th) {
             return $this->errorResponse($th);
@@ -53,15 +53,15 @@ class CategoryController extends Controller
 
 
 
-    //update  category
+    //update  products
     public function update(Request $request, $id)
     {
         try {
 
-            $category = Category::find($id);
-            if ($category) {
-                $category->update($request->input());
-                return $this->apiResponse(new CategoryResource($category), 'Category updated successfully' , 200);
+            $product = Product::find($id);
+            if ($product) {
+                $product->update($request->input());
+                return $this->apiResponse(new ProductResource($product), 'Product updated successfully' , 200);
             }
             return $this->notFoundResponse();
 
@@ -71,14 +71,14 @@ class CategoryController extends Controller
     }
 
 
-    //delete category
+    //delete products
     public function destroy($id)
     {
         try {
-        $category = Category::find($id);
-        if ($category) {
-            $category->delete();
-            return $this->apiResponse( "" ,'Category deleted successfully' , 200);
+        $product = Product::find($id);
+        if ($product) {
+            $product->delete();
+            return $this->apiResponse( "" ,'Product deleted successfully' , 200);
             }else{
                 return $this->notFoundResponse();
             }
