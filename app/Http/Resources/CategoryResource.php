@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Category;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,6 +17,7 @@ class CategoryResource extends JsonResource
         return [
             'id'  => $this->id,
             'name' => $this->name,
+            'images' =>  ImageResource::collection($this->images)
         ];
     }
 }

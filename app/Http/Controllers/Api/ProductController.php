@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Api;
 use Validator;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Traits\ApiResponseTrait;
+use App\Traits\{ApiResponseTrait,UploadsImages};
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProduct;
-use App\Http\Resources\Product\ProductResource;
+use App\Http\Resources\ProductResource;
 
 
 class ProductController extends Controller
 {
-    use ApiResponseTrait;
+    use ApiResponseTrait,UploadsImages;
 
     public function __construct()
     {
@@ -44,6 +44,19 @@ class ProductController extends Controller
                 'name' => $request->name,
             ]);
 
+                //upload images
+                if ($request->hasFile('images')) {
+
+                    foreach ($request->file('images') as $image) {
+                        //call  UploadImage from trait
+                        $path = $this->storeImage( $image ,'product_images' );
+
+                        $product->images()->create([
+                            'image_path' => $path,
+                        ]);
+                    }
+                }
+
             return $this->apiResponse(ProductResource::collection($product), 'Product created successfully' , 201);
 
         }catch (\Throwable $th) {
@@ -60,8 +73,29 @@ class ProductController extends Controller
 
             $product = Product::find($id);
             if ($product) {
+
                 $product->update($request->input());
-                return $this->apiResponse(new ProductResource($product), 'Product updated successfully' , 200);
+
+                if ($request->hasFile('images')) {
+
+                    //delete old Images from folder
+                    foreach ( $product->images as $image){
+
+                        $this->deleteImage($image->image_path);
+                    }
+
+                    foreach ($request->file('images') as $image) {
+                        //call  UploadImage from trait
+                        $path = $this->storeImage( $image ,'product_images' );
+
+                        $product->images()->update([
+                            'image_path' => $path,
+                        ]);
+                    }
+                }//end if => image
+
+             return $this->apiResponse(new ProductResource($product), 'Product updated successfully' , 200);
+
             }
             return $this->notFoundResponse();
 
@@ -77,6 +111,16 @@ class ProductController extends Controller
         try {
         $product = Product::find($id);
         if ($product) {
+
+             //check if category have images
+             if ($product->images) {
+                //delete old Images from folder
+                foreach ( $product->images as $image){
+
+                    $this->deleteImage($image->image_path);
+                    $product->images()->delete();
+                }
+            }
             $product->delete();
             return $this->apiResponse( "" ,'Product deleted successfully' , 200);
             }else{
