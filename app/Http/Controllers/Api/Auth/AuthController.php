@@ -45,6 +45,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'phone' =>'required|string|min:8'
         ]);
 
         $user = User::create([
@@ -52,6 +53,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
+            'phone'=>$request->phone,
         ]);
 
         return response()->json([

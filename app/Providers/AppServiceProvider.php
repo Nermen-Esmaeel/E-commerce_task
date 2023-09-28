@@ -16,6 +16,12 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(\App\Models\Product::class)
             );
         });
+
+        $this->app->bind(\App\Services\OrderService::class, function ($app) {
+            return new \App\Services\OrderService(
+                $app->make(\App\Models\Order::class)
+            );
+        });
     }
 
     /**

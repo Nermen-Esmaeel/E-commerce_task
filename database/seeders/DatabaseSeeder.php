@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('12345678'),
+            'phone' => '098753357',
+            'address'=> 'lattakia',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

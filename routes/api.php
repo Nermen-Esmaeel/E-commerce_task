@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Auth\AuthController;
@@ -45,5 +46,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('carts' , [CartController::class , 'store']);
         Route::post('carts/{cart}' , [CartController::class , 'update']);
         Route::delete('carts/{cart}' , [CartController::class , 'destroy']);
+
+
+        Route::post('orders' , [OrderController::class , 'confirmOrder']);
 
 });

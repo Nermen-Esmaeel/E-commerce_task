@@ -6,6 +6,7 @@ namespace App\Models;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -22,6 +23,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'phone',
     ];
 
     /**
@@ -56,6 +58,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function cart(): BelongsTo
     {
-        return $this->belongsTo(Cart::class, 'user_id', 'id');
+        return $this->belongsTo(Cart::class, 'id', 'user_id');
     }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'user_id', 'id');
+    }
+
 }
